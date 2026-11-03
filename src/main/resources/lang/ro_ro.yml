@@ -1,0 +1,8 @@
+# BiomeboundTrades — Română
+reloaded: "&a[BiomeboundTrades] Configurația a fost reîncărcată."
+rerolled: "&a[BiomeboundTrades] Ofertele tuturor sătenilor au fost reînnoite."
+no-permission: "&c[BiomeboundTrades] Nu ai permisiune."
+unknown-command: "&c[BiomeboundTrades] Utilizare: /btrades <reload|reroll|info>"
+players-only: "&cAceastă comandă este disponibilă doar jucătorilor."
+biome-info: "&e[BiomeboundTrades] Biomul tău: &f%biome% &e(grup de cărți: &f%group%&e)"
+books-disabled: "&e[BiomeboundTrades] Cărțile de biom sunt dezactivate."

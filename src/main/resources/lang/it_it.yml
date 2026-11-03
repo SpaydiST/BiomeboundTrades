@@ -1,0 +1,8 @@
+# BiomeboundTrades — Italiano
+reloaded: "&a[BiomeboundTrades] Configurazione ricaricata."
+rerolled: "&a[BiomeboundTrades] Le offerte di tutti i paesani sono state rinnovate."
+no-permission: "&c[BiomeboundTrades] Non hai il permesso."
+unknown-command: "&c[BiomeboundTrades] Uso: /btrades <reload|reroll|info>"
+players-only: "&cQuesto comando è disponibile solo ai giocatori."
+biome-info: "&e[BiomeboundTrades] Il tuo bioma: &f%biome% &e(gruppo libri: &f%group%&e)"
+books-disabled: "&e[BiomeboundTrades] I libri dei biomi sono disattivati."

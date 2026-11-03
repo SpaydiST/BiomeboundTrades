@@ -1,0 +1,8 @@
+# BiomeboundTrades — Türkçe
+reloaded: "&a[BiomeboundTrades] Yapılandırma yenilendi."
+rerolled: "&a[BiomeboundTrades] Tüm köylülerin teklifleri yenilendi."
+no-permission: "&c[BiomeboundTrades] Yetkiniz yok."
+unknown-command: "&c[BiomeboundTrades] Kullanım: /btrades <reload|reroll|info>"
+players-only: "&cBu komut yalnızca oyunculara açıktır."
+biome-info: "&e[BiomeboundTrades] Biyomunuz: &f%biome% &e(kitap grubu: &f%group%&e)"
+books-disabled: "&e[BiomeboundTrades] Biyom kitapları devre dışı."

@@ -1,0 +1,8 @@
+# BiomeboundTrades — Magyar
+reloaded: "&a[BiomeboundTrades] A konfiguráció újratöltve."
+rerolled: "&a[BiomeboundTrades] Minden falusi lakos ajánlata megújult."
+no-permission: "&c[BiomeboundTrades] Nincs jogosultságod."
+unknown-command: "&c[BiomeboundTrades] Használat: /btrades <reload|reroll|info>"
+players-only: "&cEz a parancs csak játékosoknak érhető el."
+biome-info: "&e[BiomeboundTrades] A biómád: &f%biome% &e(könyvcsoport: &f%group%&e)"
+books-disabled: "&e[BiomeboundTrades] A biómakönyvek ki vannak kapcsolva."

@@ -1,0 +1,8 @@
+# BiomeboundTrades — Čeština
+reloaded: "&a[BiomeboundTrades] Konfigurace načtena."
+rerolled: "&a[BiomeboundTrades] Nabídky všech vesničanů byly obnoveny."
+no-permission: "&c[BiomeboundTrades] Nemáte oprávnění."
+unknown-command: "&c[BiomeboundTrades] Použití: /btrades <reload|reroll|info>"
+players-only: "&cTento příkaz je dostupný pouze hráčům."
+biome-info: "&e[BiomeboundTrades] Váš biom: &f%biome% &e(skupina knih: &f%group%&e)"
+books-disabled: "&e[BiomeboundTrades] Biomy knihy jsou vypnuté."

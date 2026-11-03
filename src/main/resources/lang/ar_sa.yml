@@ -1,0 +1,8 @@
+# BiomeboundTrades — العربية
+reloaded: "&a[BiomeboundTrades] تم إعادة تحميل الإعدادات."
+rerolled: "&a[BiomeboundTrades] تم تجديد عروض جميع القرويين."
+no-permission: "&c[BiomeboundTrades] ليس لديك صلاحية."
+unknown-command: "&c[BiomeboundTrades] الاستخدام: /btrades <reload|reroll|info>"
+players-only: "&cهذا الأمر متاح للاعبين فقط."
+biome-info: "&e[BiomeboundTrades] منطقتك الحيوية: &f%biome% &e(مجموعة الكتب: &f%group%&e)"
+books-disabled: "&e[BiomeboundTrades] كتب المناطق الحيوية معطلة."

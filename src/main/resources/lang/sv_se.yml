@@ -1,0 +1,8 @@
+# BiomeboundTrades — Svenska
+reloaded: "&a[BiomeboundTrades] Konfigurationen omladdad."
+rerolled: "&a[BiomeboundTrades] Alla bybors erbjudanden förnyades."
+no-permission: "&c[BiomeboundTrades] Du har inte behörighet."
+unknown-command: "&c[BiomeboundTrades] Användning: /btrades <reload|reroll|info>"
+players-only: "&cDetta kommando är endast tillgängligt för spelare."
+biome-info: "&e[BiomeboundTrades] Ditt biom: &f%biome% &e(bokgrupp: &f%group%&e)"
+books-disabled: "&e[BiomeboundTrades] Biomböcker är avstängda."

@@ -1,0 +1,595 @@
+# ============================================================
+#  BiomeboundTrades v1.2.4
+#  «Биомные торги» — ежедневный реролл сделок жителей
+#  и биомные зачарованные книги (эксперимент «Балансировка торговли»).
+#  Версия конфига. Не менять руками.
+# ============================================================
+config-version: 6
+
+# ------------------------------------------------------------
+#  1. ЕЖЕДНЕВНЫЙ РЕРОЛЛ ТОРГОВ ЖИТЕЛЕЙ
+# ------------------------------------------------------------
+daily-reroll:
+  # Включить ежедневный переторг жителей
+  enabled: true
+
+  # Когда переторговывать:
+  #   MC_DAY      — в начале каждого игрового дня (для каждого загруженного мира)
+  #   REAL_MINUTES— каждые N реальных минут
+  mode: MC_DAY
+
+  # Как часто (в секундах) проверять, не наступил ли момент переторга.
+  # Точность реролла от этого не зависит, только «резкость» срабатывания.
+  check-interval-seconds: 5
+
+  # Для режима REAL_MINUTES: период в реальных минутах
+  real-minutes: 60
+
+  # true  — при КАЖДОМ ежедневном реролле жителю выдаются новые книги.
+  # false — ежедневно обновляются только запасы (uses = 0), а сами книги
+  #         меняются по расписанию ротации (см. book-rotation-* ниже).
+  regenerate-offers: false
+
+  # Периодическая ротация обычных (common) зачарованных книг у библиотекарей:
+  # Обычные книги меняются на новые из пула биома раз в случайные 7–14 игровых дней.
+  book-rotation-enabled: true
+  book-rotation-min-days: 7
+  book-rotation-max-days: 14
+
+  # Обновлять ли саму эксклюзивную (special) книгу у Мастера (5 ур.) каждый день.
+  # По умолчанию false — особая книга меняется вместе с обычными по расписанию
+  # ротации, если special-book-chance-percent меньше 100. При 100 она закреплена.
+  # Так нельзя ежедневно перебрасывать цену и шанс двойной книги.
+  daily-special-book-refresh: false
+
+  # Переторговать всех жителей сразу после включения/перезагрузки плагина
+  reroll-on-startup: false
+
+  # Ресток запасов ДВАЖДЫ в игровой день (утром и в полдень), как в
+  # эксперименте Mojang: uses сбрасываются, распроданные книги снова
+  # появляются в наличии. Наценка (слухи), репутация и распродажи
+  # при этом не сбрасываются.
+  restock-twice-a-day: true
+
+  # Сколько жителей обрабатывать за ОДИН тик при массовом реролле
+  # и рестоке. Защита от просадок TPS: если время ускорено сторонними
+  # плагинами (TimeSpeed и т.п.) и дней проскакивает много, сотни
+  # инвентарей пересчитываются порциями, а не все разом.
+  batch-size: 25
+
+  # Миры, в которых работает реролл. Пустой список = все миры.
+  worlds: []
+
+# ------------------------------------------------------------
+#  2. БИОМНЫЕ ЗАЧАРОВАННЫЕ КНИГИ БИБЛИОТЕКАРЕЙ
+#     (как в эксперименте «Балансировка торговли»)
+#     Каждый биом даёт свой набор книг. Чтобы получить все книги,
+#     игроку придётся посетить все семь «деревенских» биомов.
+# ------------------------------------------------------------
+biome-books:
+  # Включить биомные книги
+  enabled: true
+
+  # Запоминать «родной» биом жителя (биом, где он появился / стал библиотекарем).
+  #   true  — перевезённый в другой биом житель продаёт книги своего родного биома
+  #   false — книги зависят от текущего биома жителя
+  freeze-home-biome: true
+
+  # Показывать эффекты (частицы + звук) при обновлении торгов жителя:
+  # при ежедневном реролле и при повышении уровня.
+  show-effects: true
+
+  # Инструменты, книги с чарами для которых НЕ продаются жителями
+  # (как в эксперименте: арбалет, удочка, трезубец, булава).
+  # Задаются ключами предметов: crossbow, fishing_rod, trident, mace
+  excluded-tools:
+    - crossbow
+    - fishing_rod
+    - trident
+    - mace
+
+  # Отдельный список исключённых книг (по ключам чар).
+  # Также эти чары НЕ попадают в авто-раздачу новых книг.
+  # Данж-чары добываются только из подземелий (бастионы, древние
+  # города) — жители их НЕ продают.
+  excluded-enchants:
+    - soul_speed
+    - swift_sneak
+
+  # Если в игре появились НОВЫЕ чары/книги (будущие версии Minecraft) —
+  # автоматически добавить их в группу "default", чтобы они тоже продавались.
+  auto-distribute-new-books: true
+
+  # Базовая цена книг I уровня (изумруды). Для уровней выше I диапазон
+  # автоматически масштабируется по уровню чар и сокровищности.
+  price:
+    min: 5
+    max: 19
+    # Если больше 0 — фиксированная цена за 1 уровень чары для обычных книг.
+    # У особых книг цена задаётся в самой группе.
+    fixed: 0
+    # Общий предел скидки от репутации, распродажи и особого предложения.
+    max-total-discount-percent: 40
+
+  # Множитель цены ОСОБЫХ книг (особые книги изначально дороже
+  # обычных: цена из группы × этот множитель).
+  special-price-multiplier: 1.5
+
+  # Шанс особой книги у библиотекаря-мастера при получении 5 уровня и
+  # каждой ротации книг. Если она не выпала, оба слота занимают обычные книги.
+  # После двух неудачных выпадений следующая ротация гарантирует особую книгу.
+  # После неудачи следующая попытка идёт через минимальный срок book-rotation.
+  # 100 — особая книга всегда занимает свой слот, как в прежнем режиме.
+  # 0 — особые книги не появляются (кроме групп без обычных книг).
+  special-book-chance-percent: 25
+  special-book-pity-rotations: 2
+
+  # Параметры сделки с книгой.
+  # Внимание: каждая зачарованная книга покупается за изумруды
+  # (цена ниже) + 1 обычную книгу.
+  offer:
+    max-uses: 3
+    # Случайный лимит покупок (от 1 до 3 за завоз) специально для ОСОБЫХ (special) книг Мастера
+    special-max-uses-min: 1
+    special-max-uses-max: 2
+
+    # Книги, для которых нужны два объединения до максимума (Эффективность III,
+    # Острота III), сохраняют увеличенную партию и частый завоз.
+    multi-merge-special-max-uses-min: 3
+    multi-merge-special-max-uses-max: 4
+    multi-merge-special-restock-min-days: 2
+    multi-merge-special-restock-max-days: 3
+
+    # Для одного объединения (Защита III, Прочность II, Удача II)
+    # партия меньше, а завоз реже.
+    single-merge-special-max-uses-min: 2
+    single-merge-special-max-uses-max: 3
+    single-merge-special-restock-min-days: 4
+    single-merge-special-restock-max-days: 5
+
+    # Редкий завоз особых книг максимального уровня: 1–2 шт. раз в 5–7 дней.
+    # Книги ниже максимального уровня используют параметры single/multi-merge-special-* выше.
+    # Обычные книги пополняются 1–2 раза в день.
+    # После выкупа всей партии на книге висит крестик до следующего завоза.
+    special-restock-delay-enabled: true
+    special-restock-min-days: 5
+    special-restock-max-days: 7
+
+    experience-reward: 10
+    price-multiplier: 0.05
+
+  # Группы биомов. Имя группы — просто ключ конфига.
+  #   biomes  — список биомов (имена Bukkit вроде DESERT или minecraft:ключи).
+  #   special — ОСОБЫЕ книги: фиксированные чары и уровень.
+  #             Могут появиться только у библиотекарей уровня «Мастер» (не более одной).
+  #             price — цена; если 0 — берётся из price.min/max.
+  #   common  — ОБЫЧНЫЕ книги: чары без фиксированного уровня (как в ванилле),
+  #             уровень выбирается случайно от I до максимума.
+  groups:
+    # ─── Пустыня и Бесплодные земли ───
+    desert:
+      biomes:
+        - DESERT
+        - BADLANDS
+        - ERODED_BADLANDS
+        - WOODED_BADLANDS
+        - NETHER_WASTES
+        - CRIMSON_FOREST
+        - WARPED_FOREST
+        - SOUL_SAND_VALLEY
+        - BASALT_DELTAS
+      special:
+        - enchant: efficiency
+          level: 3
+          price: 10
+      common: [ fire_protection, thorns, infinity ]
+
+    # ─── Равнины и Умеренные леса ───
+    plains:
+      biomes:
+        - PLAINS
+        - SUNFLOWER_PLAINS
+        - MEADOW
+        - CHERRY_GROVE
+        - FOREST
+        - FLOWER_FOREST
+        - BIRCH_FOREST
+        - OLD_GROWTH_BIRCH_FOREST
+        - RIVER
+        - BEACH
+        - MUSHROOM_FIELDS
+      special:
+        - enchant: protection
+          level: 3
+          price: 10
+      common: [ punch, smite, bane_of_arthropods ]
+
+    # ─── Саванна и Тёплые моря ───
+    savanna:
+      biomes:
+        - SAVANNA
+        - SAVANNA_PLATEAU
+        - WINDSWEPT_SAVANNA
+        - WARM_OCEAN
+        - LUKEWARM_OCEAN
+        - DEEP_LUKEWARM_OCEAN
+      special:
+        - enchant: sharpness
+          level: 3
+          price: 10
+      # Проклятие привязки выпадает только как часть редкой двойной книги.
+      common: [ knockback, binding_curse, sweeping_edge ]
+
+    # ─── Заснеженные биомы ───
+    snowy:
+      biomes:
+        - SNOWY_PLAINS
+        - SNOWY_TAIGA
+        - SNOWY_TAIGA_HILLS
+        - SNOWY_TAIGA_MOUNTAINS
+        - SNOWY_BEACH
+        - ICE_SPIKES
+        - FROZEN_RIVER
+        - FROZEN_OCEAN
+        - DEEP_FROZEN_OCEAN
+        - GROVE
+        - SNOWY_SLOPES
+        - JAGGED_PEAKS
+        - FROZEN_PEAKS
+        - COLD_OCEAN
+        - DEEP_COLD_OCEAN
+      special:
+        - enchant: silk_touch
+          level: 1
+          price: 16
+      common: [ aqua_affinity, looting, frost_walker ]
+
+    # ─── Тайга и Скалистые берега ───
+    taiga:
+      biomes:
+        - TAIGA
+        - OLD_GROWTH_TAIGA
+        - OLD_GROWTH_PINE_TAIGA
+        - OLD_GROWTH_SPRUCE_TAIGA
+        - WINDSWEPT_FOREST
+        - WINDSWEPT_HILLS
+        - WINDSWEPT_GRAVELLY_HILLS
+        - STONY_PEAKS
+        - STONY_SHORE
+        - OCEAN
+        - DEEP_OCEAN
+        - DRIPSTONE_CAVES
+        - THE_END
+        - END_HIGHLANDS
+        - END_MIDLANDS
+        - END_BARRENS
+        - SMALL_END_ISLANDS
+      special:
+        - enchant: fortune
+          level: 2
+          price: 12
+      common: [ blast_protection, fire_aspect, flame ]
+
+    # ─── Джунгли и Пышные пещеры ───
+    jungle:
+      biomes:
+        - JUNGLE
+        - SPARSE_JUNGLE
+        - BAMBOO_JUNGLE
+        - LUSH_CAVES
+      special:
+        - enchant: unbreaking
+          level: 2
+          price: 10
+      common: [ feather_falling, projectile_protection, power ]
+
+    # ─── Болото и Тёмные леса ───
+    swamp:
+      biomes:
+        - SWAMP
+        - MANGROVE_SWAMP
+        - DARK_FOREST
+        - PALE_GARDEN
+        - DEEP_DARK
+      special:
+        - enchant: mending
+          level: 1
+          price: 24
+      # Проклятие утраты выпадает только как часть редкой двойной книги.
+      common: [ depth_strider, respiration, vanishing_curse ]
+
+    # ─── Группа по умолчанию ───
+    # Используется только для новых чар из будущих версий игры или датапаков
+    # (если включено auto-distribute-new-books). Если пусто — используется plains.
+    default:
+      biomes: []
+      special: []
+      common: []
+
+# ------------------------------------------------------------
+#  3. ИНФЛЯЦИЯ ЦЕН ЗА ПОВТОРНЫЕ ПОКУПКИ
+#     Повторные покупки одной книги повышают её цену для всех
+#     жителей торгового района.
+# ------------------------------------------------------------
+inflation:
+  # Включить инфляцию цен
+  enabled: true
+
+  # Граница общего счётчика инфляции: фиксированные клетки мировой
+  # сетки NxN по X/Z; высота не учитывается. При размере 32 все
+  # жители в одной клетке делят счётчик; соседняя клетка — другой район.
+  region-size: 32
+
+  # На сколько процентов повышается цена за КАЖДУЮ повторную
+  # покупку одной и той же книги (первая покупка наценку не даёт).
+  percent-per-repeat: 5
+
+  # Потолок наценки в процентах (суммарно). Дальше цена не растёт.
+  max-percent: 50
+
+# ------------------------------------------------------------
+#  4. ДВОЙНЫЕ КНИГИ
+#     У мастера-библиотекаря вместо особой книги с шансом
+#     появляется книга с ДВУМЯ совместимыми чарами сразу: особая
+#     чара биома + совместимая по типу предмета обычная чара
+#     (без проклятий, уровень 1–2).
+#     Обычные двойные книги не участвуют в инфляции.
+#     Двойные книги с проклятием учитывают инфляцию основной чары.
+# ------------------------------------------------------------
+dual-books:
+  # Включить двойные книги
+  enabled: true
+
+  # Шанс появления двойной книги вместо особой (в процентах)
+  chance-percent: 5
+
+  # Цена = цена особой книги × множитель (максимум 64 изумруда)
+  price-multiplier: 1.8
+
+  # Запас (сколько раз можно купить до распродажи)
+  max-uses: 2
+
+  # Максимальный уровень второй чары (от I до этого уровня)
+  secondary-level-max: 2
+
+# Редкие двойные книги с проклятием в качестве вторых чар.
+# Проклятия не продаются отдельно в обычных слотах. Такие книги стоят дешевле
+# обычной книги с теми же основными чарами.
+cursed-dual-books:
+  enabled: true
+  chance-percent: 8
+  binding-price-multiplier: 0.85
+  binding-max-uses: 2
+  vanishing-price-multiplier: 0.65
+  vanishing-max-uses: 1
+
+# Примерно раз в 14 игровых дней с шансом 50% один биом на 3 дня
+# получает +2 покупки одного обычного вида чар. Особые и двойные книги
+# сезонный запас не меняет.
+seasonal-stock:
+  enabled: true
+  interval-days: 14
+  duration-days: 3
+  chance-percent: 50
+  bonus-uses: 2
+
+# ------------------------------------------------------------
+#  5. ФЛАГИ СДЕЛОК (особое предложение)
+#     Когда игрок покупает N книг у одного жителя, при открытии
+#     окна с шансом предлагается скидка на одну случайную книгу.
+#     Не чаще одного раза в день на жителя + игрока.
+# ------------------------------------------------------------
+special-offer:
+  # Включить особые предложения
+  enabled: true
+
+  # Сколько книг нужно купить у одного жителя
+  purchases-required: 8
+
+  # Шанс получить предложение при открытии окна (в процентах)
+  chance-percent: 30
+
+  # Размер скидки (в процентах)
+  discount-percent: 30
+
+# ------------------------------------------------------------
+#  6. ТОРГОВАЯ РЕПУТАЦИЯ ДЕРЕВНИ
+#     За каждую купленную книгу в деревне игрок получает скидку
+#     у ВСЕХ жителей этой деревни. Противовес инфляции.
+# ------------------------------------------------------------
+reputation:
+  # Включить репутацию
+  enabled: true
+
+  # Радиус «деревни» (как у инфляции)
+  radius: 16
+
+  # Скидка в процентах за одну купленную книгу
+  percent-per-book: 1
+
+  # Потолок скидки (в процентах)
+  max-percent: 15
+
+# ------------------------------------------------------------
+#  7. ДНЕВНЫЕ РАСПРОДАЖИ
+#     Каждый игровой день в каждом мире выбирается один случайный
+#     библиотекарь, у которого одна книга со скидкой на весь день.
+# ------------------------------------------------------------
+daily-sale:
+  # Включить ежедневные распродажи
+  enabled: true
+
+  # Размер скидки на распродажу (в процентах)
+  discount-percent: 25
+
+  # Показывать частицы и звук у продавца при выборе распродажи
+  show-effects: true
+
+# ------------------------------------------------------------
+#  8. ДЕФЛЯЦИЯ
+#     Если чару в деревне давно не покупали, наценка очень
+#     медленно спадает по игровым дням.
+# ------------------------------------------------------------
+deflation:
+  # Включить дефляцию
+  enabled: true
+
+  # Сколько игровых дней без покупок чары должно пройти,
+  # прежде чем наценка начнёт падать
+  grace-days: 2
+
+  # На сколько падает счётчик наценки за каждый день простоя
+  per-day: 1
+
+# ------------------------------------------------------------
+#  9. СТРАНСТВУЮЩИЙ ТОРГОВЕЦ (как в эксперименте Mojang)
+#     Продаёт полезные биомные предметы; цены ниже ванильных.
+#     Торговец определяет свой биом по месту, где он появился.
+# ------------------------------------------------------------
+wandering-trader:
+  # Включить биомные сделки странствующего торговца
+  enabled: true
+
+  # Сколько случайных сделок выдавать торговцу
+  trade-count: 6
+
+  # Множитель цены в процентах (меньше 100 = дешевле, как в эксперименте)
+  price-multiplier: 70
+
+  # Шанс (в %), что очередная сделка будет НЕ из биома торговца,
+  # а «привозной» из другой группы. Торговец таскает товары разных
+  # биомов: 50 = половина своих товаров, половина чужих; 0 = только
+  # товары своего биома; 100 = только чужие.
+  foreign-trade-chance-percent: 50
+
+  # Наборы сделок по биомам. item — предмет, amount — количество,
+  # price — цена в изумрудах ДО множителя, max-uses (необязательно, по умолчанию 4) — запас.
+  # chance-percent (необязательно, по умолчанию 100) — шанс (в %),
+  # что сделка вообще попадёт в набор торговца. Для редких «заморских»
+  # товаров вроде Тотема Бессмертия (синергия с TotemBalance).
+  biome-groups:
+    desert:
+      biomes: [ DESERT, BADLANDS, ERODED_BADLANDS, WOODED_BADLANDS ]
+      trades:
+        - { item: CACTUS, amount: 4, price: 3 }
+        - { item: DEAD_BUSH, amount: 3, price: 1 }
+        - { item: SAND, amount: 16, price: 2 }
+        - { item: ORANGE_TERRACOTTA, amount: 8, price: 5 }
+    plains:
+      biomes: [ PLAINS, SUNFLOWER_PLAINS, MEADOW, CHERRY_GROVE, FOREST, FLOWER_FOREST, BIRCH_FOREST, OLD_GROWTH_BIRCH_FOREST ]
+      trades:
+        - { item: HONEY_BOTTLE, amount: 3, price: 5 }
+        - { item: PUMPKIN, amount: 4, price: 3 }
+        - { item: WHITE_WOOL, amount: 8, price: 3 }
+    savanna:
+      biomes: [ SAVANNA, SAVANNA_PLATEAU, WINDSWEPT_SAVANNA ]
+      trades:
+        - { item: HAY_BLOCK, amount: 3, price: 6 }
+        - { item: ACACIA_SAPLING, amount: 4, price: 2 }
+        - { item: BONE, amount: 8, price: 3 }
+    snowy:
+      biomes:
+        - SNOWY_PLAINS
+        - SNOWY_TAIGA
+        - SNOWY_BEACH
+        - ICE_SPIKES
+        - FROZEN_RIVER
+        - GROVE
+        - SNOWY_SLOPES
+        - JAGGED_PEAKS
+        - FROZEN_PEAKS
+      trades:
+        - { item: PACKED_ICE, amount: 4, price: 6 }
+        - { item: SNOW_BLOCK, amount: 8, price: 3 }
+        - { item: ICE, amount: 4, price: 5 }
+        - { item: SNOWBALL, amount: 16, price: 2 }
+    taiga:
+      biomes:
+        - TAIGA
+        - OLD_GROWTH_TAIGA
+        - OLD_GROWTH_PINE_TAIGA
+        - OLD_GROWTH_SPRUCE_TAIGA
+        - WINDSWEPT_FOREST
+        - WINDSWEPT_HILLS
+        - STONY_PEAKS
+        - STONY_SHORE
+      trades:
+        - { item: SWEET_BERRIES, amount: 8, price: 2 }
+        - { item: SPRUCE_SAPLING, amount: 4, price: 2 }
+        - { item: MOSSY_COBBLESTONE, amount: 8, price: 3 }
+    jungle:
+      biomes: [ JUNGLE, SPARSE_JUNGLE, BAMBOO_JUNGLE, LUSH_CAVES ]
+      trades:
+        - { item: BAMBOO, amount: 16, price: 3 }
+        - { item: MELON_SLICE, amount: 8, price: 3 }
+        - { item: COCOA_BEANS, amount: 4, price: 3 }
+        - { item: VINE, amount: 8, price: 3 }
+    swamp:
+      biomes: [ SWAMP, MANGROVE_SWAMP, DARK_FOREST ]
+      trades:
+        - { item: SLIME_BALL, amount: 4, price: 6 }
+        - { item: LILY_PAD, amount: 8, price: 3 }
+        - { item: BROWN_MUSHROOM, amount: 4, price: 2 }
+    pale_garden:
+      biomes: [ PALE_GARDEN ]
+      trades:
+        - { item: PALE_MOSS_BLOCK, amount: 8, price: 3 }
+        - { item: PALE_OAK_SAPLING, amount: 4, price: 2 }
+        - { item: PALE_OAK_LOG, amount: 8, price: 3 }
+    default:
+      biomes: []
+      trades:
+        - { item: BOOK, amount: 2, price: 4 }
+        - { item: BUNDLE, amount: 1, price: 4 }
+        - { item: LEAD, amount: 2, price: 5 }
+        - { item: BONE_MEAL, amount: 16, price: 3 }
+        - { item: FLINT, amount: 8, price: 3 }
+        - { item: BOWL, amount: 8, price: 2 }
+        - { item: SUGAR_CANE, amount: 8, price: 3 }
+        # Редкий «заморский» товар: Тотем Бессмертия. Выпадает лишь в 3%
+        # наборов по 1 шт. и стоит дорого (с учётом множителя 70% — 126 изумрудов,
+        # т.е. почти 2 полных стака в двух слотах; если итоговая цена > 128,
+        # автоматически переводится в изумрудные блоки).
+        - { item: TOTEM_OF_UNDYING, amount: 1, price: 180, chance-percent: 3, max-uses: 1 }
+
+# ------------------------------------------------------------
+#  10. ПЕРЕБАЛАНСИРОВКА ОСТАЛЬНЫХ ПРОФЕССИЙ (как в эксперименте)
+#     Профессии (кроме библиотекаря — его книги настраиваются
+#     отдельно) получают скидку/наценку на цены сделок, а для покупки
+#     алмазного снаряжения у кузнецов дополнительно требуются алмазы.
+#     sell — % от ванильной цены, по которой житель ПРОДАЁТ вам
+#            свой товар (меньше 100 = дешевле, больше 100 = дороже).
+#     buy  — % от ванильной цены, по которой житель ПОКУПАЕТ у вас
+#            предметы (меньше 100 = платит меньше изумрудов).
+#     100 = без изменений (как ванилла).
+# ------------------------------------------------------------
+profession-rebalance:
+  # Включить перебалансировку
+  enabled: true
+  professions:
+    armorer:       { sell: 150, buy: 75 }
+    toolsmith:     { sell: 150, buy: 75 }
+    weaponsmith:   { sell: 150, buy: 75 }
+    farmer:        { sell: 100, buy: 70 }
+    fisherman:     { sell: 100, buy: 80 }
+    shepherd:      { sell: 100, buy: 70 }
+    fletcher:      { sell: 100, buy: 100 }
+    cleric:        { sell: 100, buy: 80 }
+    leatherworker: { sell: 100, buy: 85 }
+    mason:         { sell: 100, buy: 85 }
+    cartographer:  { sell: 100, buy: 100 }
+    butcher:       { sell: 100, buy: 80 }
+
+# ------------------------------------------------------------
+#  11. ЛОКАЛИЗАЦИЯ
+# ------------------------------------------------------------
+# Сообщения плагина автоматически выбираются по языку клиента игрока.
+# Встроенные языки (в jar): en_us, ru_ru, de_de, fr_fr, es_es, pt_br,
+# it_it, pl_pl, uk_ua, tr_tr, ar_sa, cs_cz, hu_hu, ro_ro, sv_se.
+# Язык по умолчанию (если язык игрока не найден) — en_us (английский).
+# Свой перевод/правки: положи файл plugins/BiomeboundTrades/lang/<язык>.yml
+  # с теми же ключами (reloaded, rerolled, no-permission, unknown-command,
+  # players-only, biome-info, books-disabled, merchant-busy) — он перекроет встроенный.
+# Коды языков: en_us, ru_ru, de_de, fr_fr, es_es, pt_br, pt_pt, it_it,
+# nl_nl, pl_pl, uk_ua, tr_tr, ar_sa, cs_cz, hu_hu, ro_ro, sv_se и т.д.
+# (ru_ru — старый раздел "messages" больше не читается).

@@ -1,0 +1,18 @@
+name: BiomeboundTrades
+version: '${version}'
+main: org.example1.biomeboundTrades.BiomeboundTrades
+api-version: '26.2'
+load: POSTWORLD
+author: Biomebound
+description: Биомные торги — ежедневный реролл сделок и биомные книги библиотекарей.
+
+commands:
+  btrades:
+    description: Управление плагином BiomeboundTrades.
+    usage: /btrades <reload|reroll|info>
+    aliases: [biomeboundtrades, trades]
+
+permissions:
+  biomeboundtrades.admin:
+    description: Права на управление плагином.
+    default: op

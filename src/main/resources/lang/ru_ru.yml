@@ -1,0 +1,9 @@
+# BiomeboundTrades — Русский
+reloaded: "&a[BiomeboundTrades] Конфигурация перезагружена."
+rerolled: "&a[BiomeboundTrades] Все жители переторгованы."
+no-permission: "&c[BiomeboundTrades] У вас нет прав."
+unknown-command: "&c[BiomeboundTrades] Использование: /btrades <reload|reroll|info>"
+players-only: "&cЭта команда доступна только игрокам."
+biome-info: "&e[BiomeboundTrades] Ваш биом: &f%biome% &e(группа книг: &f%group%&e)"
+books-disabled: "&e[BiomeboundTrades] Биомные книги отключены."
+merchant-busy: "&e[BiomeboundTrades] Этот житель сейчас торгует с другим игроком. Попробуйте чуть позже."

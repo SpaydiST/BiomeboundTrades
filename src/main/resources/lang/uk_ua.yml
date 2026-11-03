@@ -1,0 +1,8 @@
+# BiomeboundTrades — Українська
+reloaded: "&a[BiomeboundTrades] Конфігурацію перезавантажено."
+rerolled: "&a[BiomeboundTrades] Пропозиції всіх мешканців оновлено."
+no-permission: "&c[BiomeboundTrades] У вас немає прав."
+unknown-command: "&c[BiomeboundTrades] Використання: /btrades <reload|reroll|info>"
+players-only: "&cЦя команда доступна лише гравцям."
+biome-info: "&e[BiomeboundTrades] Ваш біом: &f%biome% &e(група книг: &f%group%&e)"
+books-disabled: "&e[BiomeboundTrades] Біомні книги вимкнено."
